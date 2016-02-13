@@ -106,6 +106,33 @@
           }
         }
         return idx;
+      },
+
+      pick: function() {
+        var args = [].slice.call(arguments),
+            new_obj = {};
+
+        args.forEach(function(prop) {
+          if (prop in element) {
+            new_obj[prop] = element[prop];
+          }
+        });
+        return new_obj;
+      },
+
+      omit: function() {
+        var args = [].slice.call(arguments),
+            new_obj = {};
+        for (var prop in element) {
+          if (args.indexOf(prop) === -1) {
+            new_obj[prop] = element[prop];
+          }
+        }
+        return new_obj;
+      },
+
+      has: function(prop) {
+        return {}.hasOwnProperty.call(element, prop);
       }
     };
 
@@ -124,6 +151,19 @@
     }
     return range;
   };
+
+  _.extend = function() {
+    var args = [].slice.call(arguments),
+        old_obj = args.pop(),
+        new_obj = args[args.length - 1];
+
+    for (var prop in old_obj) {
+      new_obj[prop] = old_obj[prop];
+    }
+    return args.length === 1 ? new_obj : _.extend.apply(_, args);
+  };
+
+
 
   window._ = _;
 })();
