@@ -1,4 +1,26 @@
 (function() {
+
+  var findObjs = function(element, props, multiple) {
+    var match = multiple ? [] : undefined;
+    element.some(function(obj) {
+      var all_match = true;
+      for (var prop in props) {
+          if (!(prop in obj) || obj[prop] !== props[prop]) {
+            all_match = false;
+          }
+      }
+      if (all_match) {
+        if (multiple) {
+          match.push(obj)
+        } else {
+          match = obj;
+          return true;
+        }
+      }
+    });
+    return match;
+  };
+
   var _ = function(element) {
     u = {
       first: function() {
@@ -36,6 +58,42 @@
             qty--;
           }
           return sampled;
+      },
+
+      pluck: function(query) {
+        var vals = [];
+
+        element.forEach(function(obj) {
+          if (obj[query]) {
+            vals.push(obj[query]);
+          }
+        });
+        return vals;
+      },
+
+      keys: function() {
+        var keys = [];
+
+        for (var prop in element) {
+          keys.push(prop);
+        }
+        return keys;
+      },
+
+      values: function() {
+        var values = [];
+        for (var prop in element) {
+          values.push(element[prop]);
+        }
+        return values;
+      },
+
+      findWhere: function(props) {
+        return findObjs(element, props, false);
+      },
+
+      where: function(props) {
+        return findObjs(element, props, true);
       },
 
       lastIndexOf: function(search) {
